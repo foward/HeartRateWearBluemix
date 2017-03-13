@@ -116,11 +116,19 @@ public class HeartRateWearService extends Service implements SensorEventListener
         Intent intent = new Intent();
         intent.setAction("heartRateAction");
         intent.putExtra("HeartRate", event.values[0]);
-        sendBroadcast(intent);
-        sendToMobile(event);
+        if( event.values[0] >0 ) {
+            Log.v(this.getClass().getName(), "HeartRate change: " + event.values[0]);
+            sendBroadcast(intent);
+            sendToMobile(event);
+        }else{
+            Log.v(this.getClass().getName(), "HeartRate 0.0");
+        }
     }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        Log.d(this.getClass().getName(), "onAccuracyChanged - accuracy: " + accuracy);
     }
 }

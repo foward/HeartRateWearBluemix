@@ -80,14 +80,17 @@ public class HeartRateMobileActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             // ahr
-            Log.v(this.getClass().getName(), "Value Received");
+           // Log.v(this.getClass().getName(), "Value Received");
             if (arg1.getAction().equals("heartRateAction")) {
                 float hr = arg1.getFloatExtra("HeartRate", 0);
                 long ts = arg1.getLongExtra("timestamp", 0);
-                ((TextView)HeartRateMobileActivity.this.findViewById(R.id.heartRateTextView)).setText("Heart Rate : " + hr);
+                if(hr != 0) {
+                    Log.v(this.getClass().getName(), "HeartRate Mobile" + hr);
+                    ((TextView) HeartRateMobileActivity.this.findViewById(R.id.heartRateTextView)).setText("Heart Rate : " + hr);
 
-                if (connected)
-                    MqttHandler.getInstance(HeartRateMobileActivity.this).publish(ts, hr);
+                    if (connected)
+                        MqttHandler.getInstance(HeartRateMobileActivity.this).publish(ts, hr);
+                }
 
             }
         }

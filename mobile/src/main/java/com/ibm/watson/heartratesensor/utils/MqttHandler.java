@@ -2,6 +2,9 @@ package com.ibm.watson.heartratesensor.utils;
 
 import android.content.Context;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -9,6 +12,11 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by friveros on 11/03/2017.
@@ -91,10 +99,25 @@ public class MqttHandler implements MqttCallback {
         }
     }
 
+
     public void publish(long timestamp, float heartRateValue) {
         if (isConnected()) {
-            String msg = "{'timestamp':"+timestamp+",'heartRate':"+heartRateValue+"}";
-            MqttMessage mqttMsg = new MqttMessage(msg.getBytes());
+
+            //Format the Json String
+            JSONObject heartRateObj = new JSONObject();
+            JSONObject jsonObj = new JSONObject();
+            try {
+                heartRateObj.put("heartRate", heartRateValue);
+                heartRateObj.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .format(new Date()));
+                jsonObj.put("d", heartRateObj);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+
+          //  String msg = "{'timestamp':"+timestamp+",'heartRate':"+heartRateValue+"}";
+            MqttMessage mqttMsg = new MqttMessage(jsonObj.toString().getBytes());
             mqttMsg.setRetained(false);
             mqttMsg.setQos(0);
             try {
@@ -102,6 +125,9 @@ public class MqttHandler implements MqttCallback {
             } catch (Exception e) {
 
             }
+
+
+
         }
     }
 

@@ -56,6 +56,7 @@ public class HeartRateWearActivity extends Activity {
             Log.v(this.getClass().getName(), "Value Recieved");
             if (arg1.getAction().equals("heartRateAction")) {
                 float hr = arg1.getFloatExtra("HeartRate", 0);
+                Log.v(this.getClass().getName(), "Value Recieved" + hr);
                 if (HeartRateWearActivity.this.mTextView != null) {
                     HeartRateWearActivity.this.mTextView.setText("Heart Rate : " + hr);
                 }
